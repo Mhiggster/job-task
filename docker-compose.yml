@@ -1,0 +1,44 @@
+version: '3'
+
+
+services:
+  web:
+    build: ./.docker/php-fpm
+    volumes:
+      - ./:/var/www/App
+      # environment:
+      # DB_HOST: 127.0.0.1
+      # DB_PORT: 3306
+    depends_on:
+      - mysql
+      - adminer
+  nginx:
+    image: nginx
+    volumes:
+      - ./:/var/www/App
+      - ./.docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "8000:80"
+    environment:
+      - NGINX_HOST=127.0.0.1
+      - NGINX_PORT=80
+    depends_on:
+      - web
+  mysql:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123qwe123qwe
+      MYSQL_USER: mhiggster
+      MYSQL_PASSWORD: 123qwe123qwe
+      MYSQL_DATABASE: choco
+    ports:
+      - 3306:3306
+    volumes:
+      - ./.docker/mysql:/var/lib/mysql
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
