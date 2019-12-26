@@ -57,7 +57,7 @@ class Promo extends QueryBuilder
     {
         $promo = $this->selectRandom();
         $promo['status'] = ($promo['status'] === 'Off') ? 'On' : 'Off';
-        return $promo;
+        return ['content' => $promo];
     }
 
     /**
@@ -65,6 +65,17 @@ class Promo extends QueryBuilder
      */
     public function allPromo() : array
     {
-        return Helpers::addSlugable($this->all());
+        return ['content' => Helpers::addSlugable($this->all())];
+    }
+
+
+    public function promo($id)
+    {
+        return ['content' => $this->find($id)];
+    }
+
+    public function deletePromo($id)
+    {
+        return ['deleted' => $this->delete($id)];
     }
 }

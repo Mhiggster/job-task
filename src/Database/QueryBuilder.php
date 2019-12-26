@@ -13,12 +13,35 @@ class QueryBuilder
     private $pdo;
 
     /**
+     * @var bool
+     */
+    private $responseMessage = [
+        'table' => 'Таблицы не существует'
+    ];
+
+    /**
      * QueryBuilder constructor.
      * @param PDO $pdo
      */
     public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
+    }
+
+    /**
+     * @param $msg
+     */
+    public function setResponseMessage($msg)
+    {
+        $this->responseMessage = $msg;
+    }
+
+    /**
+     * @return bool|string
+     */
+    public function getResponseMessage()
+    {
+        return $this->responseMessage;
     }
 
     /**
@@ -52,7 +75,9 @@ class QueryBuilder
             $st = $this->pdo->prepare($this->promoTable());
             $st->execute();
         } catch (\PDOException $e) {
-            echo 'Таблица '.$this->tableName().' уже существует!';
+            $this->setResponseMessage(
+                ['table' => 'Таблица '.$this->tableName().' уже существует!']
+            );
         }
     }
 
@@ -97,5 +122,26 @@ class QueryBuilder
         $st->execute();
 
         return $st->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    public function find(int $id)
+    {
+        $st = $this->pdo->prepare('SELECT * FROM '.$this->tableName().' WHERE id = ?');
+        $st->execute([$id]);
+
+        return $st->fetch(PDO::FETCH_ASSOC);
+    }
+
+
+    public function delete(int $id)
+    {
+        $st = $this->pdo->prepare('DELETE FROM '.$this->tableName().' WHERE id = ?');
+        $st->execute([$id]);
+
+        return true;
     }
 }

@@ -6,6 +6,7 @@ namespace Choco;
 use Choco\App\Controllers\MainController;
 use Choco\App\Model\Promo;
 use Choco\Database\DB;
+use Choco\Request;
 
 class Application
 {
@@ -21,8 +22,8 @@ class Application
      */
     public function run()
     {
-        $this->bindParams();
-        $this->callAction(new MainController());
+         $this->bindParams();
+         $this->callAction(new MainController($this->getStorage('promo')));
     }
 
     /**
@@ -61,10 +62,21 @@ class Application
      * @param MainController $mainController
      * @return string
      */
-    private function callAction(MainController $mainController) : string
+    private function callAction(MainController $mainController)
     {
-        return $mainController->index(
-            $this->getStorage('promo')
-        );
+        if( Request::method() === 'GET' && Request::uri() === 'random-promo' ) {
+            return $mainController->getRandomData();
+        }
+
+        if( Request::method() === 'GET' && Request::uri() === 'promos' ) {
+            return $mainController->getAllPromo();
+        }
+
+        if( Request::method() === 'GET' && Request::uri() === 'promo' ) {
+            return $mainController->getPromo(17);
+        }
+
+        // promo/:id // delete
+        return $mainController->deletePromo(17);
     }
 }

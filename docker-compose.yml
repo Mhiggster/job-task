@@ -5,7 +5,7 @@ services:
   web:
     build: ./.docker/php-fpm
     volumes:
-      - ./:/var/www/App
+      - ./:/var/www/app
       # environment:
       # DB_HOST: 127.0.0.1
       # DB_PORT: 3306

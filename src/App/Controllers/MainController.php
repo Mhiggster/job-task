@@ -8,21 +8,64 @@ use Choco\Helpers;
 
 class MainController
 {
+    private $promo;
+
     /**
+     * MainController constructor.
      * @param Promo $promo
+     */
+    public function __construct(Promo $promo)
+    {
+        $this->promo = $promo;
+        // Загружаем csv данные в базу
+        $this->promo->loadCSV('data.csv');
+    }
+
+    /**
      * @return string
      */
-    public function index(Promo $promo) : string
+    public function index() : string
     {
-        // Загружаем csv данные в базу
-        $promo->loadCSV('data.csv');
+        return Helpers::view('home.php');
+    }
 
-        // Выбираем случайную запись и меняем его статус
-        $randomPromo = $promo->randomPromo();
+    public function getRandomData()
+    {
+        echo Helpers::jsonResponse(
+            array_merge(
+                $this->promo->getResponseMessage(),
+                $this->promo->randomPromo()
+            ), 200
+        );
+    }
 
-        // Выбираем все записи
-        $allPromo = $promo->allPromo();
+    public function getAllPromo()
+    {
+        echo Helpers::jsonResponse(
+            array_merge(
+                $this->promo->getResponseMessage(),
+                $this->promo->allPromo()
+            ), 200
+        );
+    }
 
-        return Helpers::view('home.php', compact('randomPromo', 'allPromo'));
+    public function getPromo(int $id)
+    {
+        echo Helpers::jsonResponse(
+            array_merge(
+                $this->promo->getResponseMessage(),
+                $this->promo->promo($id)
+            ), 200
+        );
+    }
+
+    public function deletePromo($id)
+    {
+        echo Helpers::jsonResponse(
+            array_merge(
+                $this->promo->getResponseMessage(),
+                    $this->promo->deletePromo($id)
+            ), 200
+        );
     }
 }
