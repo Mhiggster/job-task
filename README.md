@@ -11,11 +11,11 @@
 
 Переходим в проект и устанавливаем
 
-    cd app/ && composer dump-autoload
+    cd app/promo-service && composer dump-autoload
 
 Настраиваем подключение к базе
 
-    configs/database.php
+    promo-service/configs/database.php
     
 Если используете docker
     
