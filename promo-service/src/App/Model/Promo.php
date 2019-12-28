@@ -68,12 +68,24 @@ class Promo extends QueryBuilder
         return ['content' => Helpers::addSlugable($this->all())];
     }
 
+    public function links() : array
+    {
+        return ['content' => Helpers::addSlugable($this->field('name'))];
+    }
 
+    /**
+     * @param $id
+     * @return array
+     */
     public function promo($id)
     {
         return ['content' => $this->find($id)];
     }
 
+    /**
+     * @param $id
+     * @return array
+     */
     public function deletePromo($id)
     {
         return ['deleted' => $this->delete($id)];

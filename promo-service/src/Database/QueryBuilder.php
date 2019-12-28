@@ -125,6 +125,18 @@ class QueryBuilder
     }
 
     /**
+     * @param string $field
+     * @return array
+     */
+    public function field(string $field) : array
+    {
+        $st = $this->pdo->prepare('SELECT '.$field.' FROM '.$this->tableName());
+        $st->execute();
+
+        return $st->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
      * @param int $id
      * @return mixed
      */

@@ -20,3 +20,12 @@
 Если используете docker
     
     docker-compose up -d 
+
+
+`localhost:8000/random-promo` // Рандомная запись
+
+`localhost:8000/promos` // Все записи
+
+`localhost:8000/promo/:id` // Конкретная запись
+
+`localhost:8000/links` // Список ссылкок

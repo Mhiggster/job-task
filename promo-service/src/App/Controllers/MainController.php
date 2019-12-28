@@ -49,7 +49,17 @@ class MainController
         );
     }
 
-    public function getPromo(int $id)
+    public function links()
+    {
+        echo Helpers::jsonResponse(
+            array_merge(
+                $this->promo->getResponseMessage(),
+                $this->promo->links()
+            ), 200
+        );
+    }
+
+    public function getPromo(int $id = 1)
     {
         echo Helpers::jsonResponse(
             array_merge(
@@ -59,7 +69,7 @@ class MainController
         );
     }
 
-    public function deletePromo($id)
+    public function deletePromo(int $id = 1)
     {
         echo Helpers::jsonResponse(
             array_merge(

@@ -7,6 +7,7 @@ use Choco\App\Controllers\MainController;
 use Choco\App\Model\Promo;
 use Choco\Database\DB;
 use Choco\Request;
+use Choco\Router;
 
 class Application
 {
@@ -23,7 +24,8 @@ class Application
     public function run()
     {
          $this->bindParams();
-         $this->callAction(new MainController($this->getStorage('promo')));
+         // $this->callAction(new Router($this->getStorage('promo-service')));
+         $this->callAction(new Router());
     }
 
     /**
@@ -34,7 +36,7 @@ class Application
     private function bindParams() : void
     {
         $this->bind('database', require 'configs/database.php');
-        $this->bind('promo', new Promo(
+        $this->bind('promo-service', new Promo(
            DB::connection($this->getStorage('database'))
         ));
     }
@@ -53,30 +55,31 @@ class Application
      * @param $name
      * @return array|object
      */
-    private function getStorage(string $name)
+    public function getStorage(string $name)
     {
         return $this->storage[$name];
     }
 
     /**
-     * @param MainController $mainController
+     * @param \Choco\Router $router
      * @return string
      */
-    private function callAction(MainController $mainController)
+    private function callAction(Router $router)
     {
-        if( Request::method() === 'GET' && Request::uri() === 'random-promo' ) {
-            return $mainController->getRandomData();
-        }
-
-        if( Request::method() === 'GET' && Request::uri() === 'promos' ) {
-            return $mainController->getAllPromo();
-        }
-
-        if( Request::method() === 'GET' && Request::uri() === 'promo' ) {
-            return $mainController->getPromo(17);
-        }
-
-        // promo/:id // delete
-        return $mainController->deletePromo(17);
+        $router->load($this);
+//        if( Request::method() === 'GET' && Request::uri() === 'random-promo-service' ) {
+//            return $mainController->getRandomData();
+//        }
+//
+//        if( Request::method() === 'GET' && Request::uri() === 'promos' ) {
+//            return $mainController->getAllPromo();
+//        }
+//
+//        if( Request::method() === 'GET' && Request::uri() === 'promo-service' ) {
+//            return $mainController->getPromo(17);
+//        }
+//
+//        // promo-service/:id // delete
+//        return $mainController->deletePromo(17);
     }
 }
